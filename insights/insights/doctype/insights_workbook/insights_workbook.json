@@ -6,7 +6,10 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
-  "data_backup"
+  "queries",
+  "charts",
+  "dashboards",
+  "enable_auto_save"
  ],
  "fields": [
   {
@@ -17,29 +20,30 @@
    "reqd": 1
   },
   {
-   "fieldname": "data_backup",
+   "fieldname": "queries",
    "fieldtype": "JSON",
-   "hidden": 1,
-   "label": "Data Backup",
-   "read_only": 1
+   "label": "Queries"
+  },
+  {
+   "fieldname": "charts",
+   "fieldtype": "JSON",
+   "label": "Charts"
+  },
+  {
+   "fieldname": "dashboards",
+   "fieldtype": "JSON",
+   "label": "Dashboards"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_auto_save",
+   "fieldtype": "Check",
+   "label": "Enable Auto Save"
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [
-  {
-   "link_doctype": "Insights Query v3",
-   "link_fieldname": "workbook"
-  },
-  {
-   "link_doctype": "Insights Chart v3",
-   "link_fieldname": "workbook"
-  },
-  {
-   "link_doctype": "Insights Dashboard v3",
-   "link_fieldname": "workbook"
-  }
- ],
- "modified": "2025-04-11 17:26:45.109680",
+ "links": [],
+ "modified": "2024-11-24 12:36:33.196238",
  "modified_by": "Administrator",
  "module": "Insights",
  "name": "Insights Workbook",
@@ -51,6 +55,7 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "if_owner": 1,
    "print": 1,
    "read": 1,
    "report": 1,
@@ -71,11 +76,10 @@
    "write": 1
   }
  ],
- "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "title",
- "track_changes": 1
+ "track_views": 1
 }

@@ -1,82 +1,134 @@
 <script setup lang="ts">
-import { debounce } from 'frappe-ui'
-import { Combine } from 'lucide-vue-next'
-import { provide } from 'vue'
-import { wheneverChanges } from '../../helpers'
-import QueryBuilderToolbar from '../../query/components/QueryBuilderToolbar.vue'
-import QueryDataTable from '../../query/components/QueryDataTable.vue'
-import QueryOperations from '../../query/components/QueryOperations.vue'
-import { count, makeDimension } from '../../query/helpers'
+import { ref, watch } from 'vue'
+import DataTable from '../../components/DataTable.vue'
 import { Query } from '../../query/query'
-import { QueryResultColumn } from '../../types/query.types'
+import { Operation, QueryResult, QueryResultColumn, QueryResultRow } from '../../types/query.types'
+import { getDrillDownQuery } from '../helpers'
+import { column } from '../../query/helpers'
 
-const props = defineProps<{ query: Query }>()
+const emit = defineEmits({ close: () => true })
+const props = defineProps<{
+	chart: {
+		operations: Operation[]
+		use_live_connection?: boolean
+		result: QueryResult
+	}
+	row: QueryResultRow
+	column: QueryResultColumn
+}>()
 
-const show = defineModel()
-wheneverChanges(
-	show,
+const showDrillDownResults = ref(false)
+const drillDownQuery = ref<Query | null>(null)
+const sortOrder = ref<Record<string, 'asc' | 'desc'>>({})
+
+watch(
+	() => props.row || props.column,
 	() => {
-		if (show.value && !props.query.result.executedSQL && !props.query.executing) {
-			props.query.execute()
+		const query = getDrillDownQuery(
+			props.chart.operations,
+			props.chart.result,
+			props.row,
+			props.column,
+			props.chart.use_live_connection
+		)
+		if (query) {
+			showDrillDownResults.value = true
+			drillDownQuery.value = query
+			drillDownQuery.value.execute().then(() => {
+				return drillDownQuery.value?.fetchResultCount()
+			})
 		}
 	},
-	{ immediate: true }
+	{ immediate: true, deep: true }
 )
 
-provide('query', props.query)
+function onSort(newSortOrder: Record<string, 'asc' | 'desc'>) {
+	sortOrder.value = newSortOrder
 
-function _groupBy(column: QueryResultColumn) {
-	props.query.addSummarize({
-		dimensions: [makeDimension(column)],
-		measures: [count()],
-	})
+	if (drillDownQuery.value) {
+		Object.entries(newSortOrder).forEach(([columnName, direction]) => {
+			drillDownQuery.value?.addOrderBy({
+				column: column(columnName),
+				direction,
+			})
+		})
+
+		drillDownQuery.value
+			.execute()
+			.then(() => drillDownQuery.value?.fetchResultCount())
+			.catch((error) => {
+				console.error('Failed to sort and fetch row count:', error)
+			})
+	}
 }
-// FIX: debug why groupBy is called twice
-const groupBy = debounce(_groupBy, 50)
+
+function loadAllRows() {
+	if (drillDownQuery.value) {
+		drillDownQuery.value.addLimit(drillDownQuery.value.result.totalRowCount)
+		drillDownQuery.value
+			.execute()
+			.then(() => {
+				return drillDownQuery.value?.fetchResultCount()
+			})
+			.catch((error) => {
+				console.error('Failed to load all rows:', error)
+			})
+	}
+}
+
+function closeDialog() {
+	showDrillDownResults.value = false
+	drillDownQuery.value = null
+	emit('close')
+}
 </script>
 
 <template>
 	<Dialog
-		v-model="show"
+		v-model="showDrillDownResults"
 		:options="{
-			title: 'Drill Down',
+			title: 'Drill Down Results',
 			size: '5xl',
 		}"
+		@close="closeDialog"
 	>
 		<template #body-content>
-			<div class="relative flex h-[32rem] w-full flex-1 gap-4 overflow-hidden bg-white">
-				<div class="flex h-full flex-1 flex-col gap-2 overflow-hidden p-0.5">
-					<QueryBuilderToolbar></QueryBuilderToolbar>
-					<div class="flex flex-1 overflow-hidden rounded border">
-						<QueryDataTable
-							:enable-sort="true"
-							:enable-drill-down="true"
-							:query="props.query"
-						>
-							<template #header-prefix="{ column }">
-								<Tooltip text="Group By" :hover-delay="0.2">
-									<Button
-										variant="ghost"
-										class="rounded-none"
-										@click="() => groupBy(column)"
-									>
-										<template #icon>
-											<Combine
-												class="h-4 w-4 text-gray-700"
-												stroke-width="1.5"
-											/>
-										</template>
-									</Button>
-								</Tooltip>
-							</template>
-						</QueryDataTable>
-					</div>
-				</div>
-				<div
-					class="relative z-[1] flex h-full w-[17rem] flex-shrink-0 overflow-y-auto rounded border bg-white"
+			<div
+				v-if="drillDownQuery"
+				class="relative flex h-[35rem] w-full flex-1 flex-col overflow-hidden rounded border bg-white"
+			>
+				<DataTable
+					:loading="drillDownQuery.executing"
+					:columns="drillDownQuery.result.columns"
+					:rows="drillDownQuery.result.rows"
+					:enable-pagination="true"
+					:show-column-totals="true"
+					:show-filter-row="true"
+					:sort-order="sortOrder"
+					@sort="onSort"
+					:on-export="drillDownQuery ? drillDownQuery.downloadResults : undefined"
 				>
-					<QueryOperations />
-				</div>
+					<template #footer-left>
+						<div class="flex items-center justify-between gap-4 p-1">
+							<p class="tnum text-sm text-gray-600">
+								Showing {{ drillDownQuery.result.rows.length }} of
+								{{ drillDownQuery.result.totalRowCount }} rows
+							</p>
+							<Button
+								v-if="
+									drillDownQuery.result.rows.length <
+									drillDownQuery.result.totalRowCount
+								"
+								:variant="'ghost'"
+								theme="gray"
+								size="sm"
+								label="Load All Rows"
+								@click="loadAllRows"
+							>
+							</Button>
+						</div>
+					</template>
+				</DataTable>
 			</div>
 		</template>
 	</Dialog>

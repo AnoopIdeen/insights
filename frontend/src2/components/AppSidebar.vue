@@ -1,4 +1,4 @@
-<template>
+<template> 
 	<div
 		class="flex h-full flex-col justify-between transition-all duration-300 ease-in-out"
 		:class="isSidebarCollapsed ? 'w-12' : 'w-56'"

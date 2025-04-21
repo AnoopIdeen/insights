@@ -18,7 +18,7 @@ function onTypeChange(newType: ColumnDataType, togglePopover: () => void) {
 		<template #target="{ togglePopover, isOpen }">
 			<Button
 				variant="ghost"
-				class="rounded-none"
+				class="rounded-sm"
 				@click="togglePopover"
 				:class="isOpen ? '!bg-gray-100' : ''"
 			>
