@@ -37,6 +37,7 @@ def get_user_info():
             "role": ["in", ("Insights Admin")],
         },
     )
+
     is_user = frappe.db.exists(
         "Has Role",
         {
