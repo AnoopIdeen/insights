@@ -1,26 +1,32 @@
 <script setup lang="ts">
-import { inject, ref } from 'vue'
+import { computed, inject } from 'vue'
 import Query from '../query/Query.vue'
-import { workbookKey } from './workbook'
-import { useRouter } from 'vue-router'
+import { Workbook, workbookKey } from './workbook'
+import WorkbookQueryEmptyState from './WorkbookQueryEmptyState.vue'
 
-const props = defineProps<{ workbook_name?: string; query_name: string }>()
+const props = defineProps<{ name?: string; index: number | string }>()
 
-const router = useRouter()
-const workbook = inject(workbookKey)!
+const workbook = inject<Workbook>(workbookKey)
+const activeQuery = computed(() => workbook?.doc.queries[Number(props.index)])
 
-let query_name = ref(props.query_name)
-const index = Number(props.query_name)
-if (
-	index >= 0 &&
-	workbook.doc.queries[index] &&
-	!workbook.doc.queries.find((q) => q.name === props.query_name)
-) {
-	query_name.value = workbook.doc.queries[index].name
-	router.replace(`/workbook/${workbook.doc.name}/query/${query_name.value}`)
+const typeIsSet = computed(() => {
+	return (
+		activeQuery.value?.is_native_query ||
+		activeQuery.value?.is_script_query ||
+		activeQuery.value?.is_builder_query ||
+		activeQuery.value?.operations.find((op) => op.type === 'source')
+	)
+})
+
+function setQueryType(interfaceType: 'query-builder' | 'sql-editor' | 'script-editor') {
+	if (!activeQuery.value) return
+	activeQuery.value.is_native_query = interfaceType === 'sql-editor'
+	activeQuery.value.is_script_query = interfaceType === 'script-editor'
+	activeQuery.value.is_builder_query = interfaceType === 'query-builder'
 }
 </script>
 
 <template>
-	<Query :query_name="query_name" />
+	<WorkbookQueryEmptyState v-if="activeQuery && !typeIsSet" @select="setQueryType" />
+	<Query v-if="activeQuery && typeIsSet" :key="activeQuery.name" :query="activeQuery" />
 </template>

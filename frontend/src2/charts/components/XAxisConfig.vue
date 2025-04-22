@@ -46,7 +46,7 @@ watchEffect(() => {
 					{ label: '90°', value: 90 },
 				]"
 			/>
-			<Toggle label="Show Axis Title" />
+			<Checkbox label="Show Axis Title" />
 			<InlineFormControlLabel v-if="false" label="Axis Title Text">
 				<FormControl />
 			</InlineFormControlLabel>

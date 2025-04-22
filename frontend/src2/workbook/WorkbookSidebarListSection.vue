@@ -5,10 +5,10 @@ const section = defineProps<{
 	emptyMessage: string
 	items: any[]
 	itemKey: string
-	isActive: (item: any) => boolean
+	isActive: (idx: number) => boolean
 	add: () => void
 	remove: (item: any) => void
-	route: (item: any) => string
+	route: (idx: number) => string
 }>()
 
 function setDraggedItem(event: DragEvent, row: any) {
@@ -25,9 +25,12 @@ function setDraggedItem(event: DragEvent, row: any) {
 				<div class="text-sm font-medium">{{ section.title }}</div>
 			</div>
 			<div>
-				<Button class="!h-fit !p-1" variant="ghost" @click="section.add()">
+				<button
+					class="cursor-pointer rounded p-1 transition-colors hover:bg-gray-100"
+					@click="section.add()"
+				>
 					<Plus class="h-4 w-4 text-gray-700" stroke-width="1.5" />
-				</Button>
+				</button>
 			</div>
 		</div>
 		<div
@@ -41,12 +44,12 @@ function setDraggedItem(event: DragEvent, row: any) {
 				v-for="(row, idx) in section.items"
 				:key="row[section.itemKey]"
 				class="group w-full cursor-pointer rounded transition-all hover:bg-gray-100"
-				:class="section.isActive(row) ? ' bg-gray-100' : ' hover:border-gray-300'"
+				:class="section.isActive(idx) ? ' bg-gray-100' : ' hover:border-gray-300'"
 				draggable="true"
 				@dragstart="setDraggedItem($event, row)"
 			>
 				<router-link
-					:to="route(row)"
+					:to="route(idx)"
 					class="flex h-7.5 items-center justify-between rounded pl-1.5 text-sm"
 				>
 					<div class="flex gap-1.5 overflow-hidden">

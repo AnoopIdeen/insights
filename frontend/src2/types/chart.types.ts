@@ -49,7 +49,6 @@ export type YAxisBar = Series & {
 	series: SeriesBar[]
 	stack?: boolean
 	normalize?: boolean
-	overlap?: boolean
 }
 export type SeriesBar = Series & {
 	type: 'bar'

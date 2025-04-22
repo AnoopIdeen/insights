@@ -59,40 +59,73 @@ import Settings from '../settings/Settings.vue'
 import SidebarLink from './SidebarLink.vue'
 import UserDropdown from './UserDropdown.vue'
 import { TrialBanner } from 'frappe-ui/frappe'
+import session from '../session'
 
 const isSidebarCollapsed = useStorage('insights:sidebarCollapsed', false)
 const showSettingsDialog = ref(false)
 
 const settings = useSettings()
 const is_fc_site = window.is_fc_site
-
-const links = ref([
-	{
-		label: 'Dashboards',
-		icon: LayoutGrid,
-		to: 'DashboardList',
-	},
-	{
-		label: 'Workbooks',
-		icon: Book,
-		to: 'WorkbookList',
-	},
-	{
-		label: 'Data Sources',
-		icon: Database,
-		to: 'DataSourceList',
-	},
-	{
-		label: 'Data Store',
-		icon: DatabaseZap,
-		to: 'DataStoreList',
-		hidden: computed(() => !settings.doc.enable_data_store),
-	},
-	{
-		label: 'Settings',
-		icon: SettingsIcon,
-		to: 'Settings',
-		onClick: () => (showSettingsDialog.value = true),
-	},
-])
+const links = ref(
+	session.user.is_admin
+		? [
+				{
+					label: 'Dashboards',
+					icon: LayoutGrid,
+					to: 'DashboardList',
+				},
+				{
+					label: 'Workbooks',
+					icon: Book,
+					to: 'WorkbookList',
+				},
+				{
+					label: 'Data Sources',
+					icon: Database,
+					to: 'DataSourceList',
+				},
+				{
+					label: 'Data Store',
+					icon: DatabaseZap,
+					to: 'DataStoreList',
+					hidden: computed(() => !settings.doc.enable_data_store),
+				},
+				{
+					label: 'Settings',
+					icon: SettingsIcon,
+					to: 'Settings',
+					onClick: () => (showSettingsDialog.value = true),
+				},
+		  ]
+		: []
+)
+// const links = ref([
+// 	{
+// 		label: 'Dashboards',
+// 		icon: LayoutGrid,
+// 		to: 'DashboardList',
+// 	},
+// 	{
+// 		label: 'Workbooks',
+// 		icon: Book,
+// 		to: 'WorkbookList',
+// 	},
+// 	{
+// 		label: 'Data Sources',
+// 		icon: Database,
+// 		to: 'DataSourceList',
+// 	},
+// 	{
+// 		label: 'Data Store',
+// 		icon: DatabaseZap,
+// 		to: 'DataStoreList',
+// 		hidden: computed(() => !settings.doc.enable_data_store),
+// 	},
+// 	{
+// 		label: 'Settings',
+// 		icon: SettingsIcon,
+// 		to: 'Settings',
+// 		onClick: () => (showSettingsDialog.value = true),
+// 	},
+// ])
 </script>

@@ -10,7 +10,6 @@ import { useMagicKeys } from '@vueuse/core'
 import { whenever } from '@vueuse/core'
 
 const query = inject<Query>('query')!
-query.autoExecute = true
 
 const keys = useMagicKeys()
 const cmdZ = keys['Meta+Z']

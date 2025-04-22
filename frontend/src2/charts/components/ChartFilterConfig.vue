@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { Plus, X } from 'lucide-vue-next'
-import { computed, inject, ref } from 'vue'
+import { ref } from 'vue'
 import DataTypeIcon from '../../query/components/DataTypeIcon.vue'
 import FiltersSelectorDialog from '../../query/components/FiltersSelectorDialog.vue'
-import useQuery, { Query } from '../../query/query'
-import { FilterArgs, FilterGroupArgs } from '../../types/query.types'
-import { Chart } from '../chart'
+import { ColumnOption, FilterArgs, FilterGroupArgs } from '../../types/query.types'
 
+const props = defineProps<{ columnOptions: ColumnOption[] }>()
 const filterGroup = defineModel<FilterGroupArgs>({
 	default: () => {
 		return {
@@ -16,15 +15,9 @@ const filterGroup = defineModel<FilterGroupArgs>({
 	},
 })
 
-const chart = inject<Chart>('chart')!
-const columnOptions = computed(() => {
-	if (!chart.doc.query) return []
-	return useQuery(chart.doc.query).result.columnOptions
-})
-
 const showFiltersSelectorDialog = ref(false)
 function getColumnType(column_name: string) {
-	const column = columnOptions.value.find((column) => column.value === column_name)
+	const column = props.columnOptions.find((column) => column.value === column_name)
 	if (!column) {
 		return 'String'
 	}
@@ -80,7 +73,7 @@ function getFilterLabel(filter: FilterArgs) {
 		v-if="showFiltersSelectorDialog"
 		v-model="showFiltersSelectorDialog"
 		:filter-group="filterGroup"
-		:column-options="columnOptions"
+		:column-options="props.columnOptions"
 		@select="filterGroup = $event"
 	/>
 </template>

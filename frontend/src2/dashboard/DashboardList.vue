@@ -95,9 +95,7 @@ watchEffect(() => {
 							<div class="mt-1.5 flex gap-2">
 								<div class="flex items-center gap-1">
 									<Eye class="h-3 w-3 text-gray-600" stroke-width="1.5" />
-									<span class="text-xs text-gray-600">
-										{{ dashboard.views }}
-									</span>
+									<span class="text-xs text-gray-600">10</span>
 								</div>
 								<div class="flex items-center gap-1">
 									<BarChart2 class="h-3 w-3 text-gray-600" stroke-width="1.5" />
