@@ -2,6 +2,7 @@
 import ColorInput from '@/components/Controls/ColorInput.vue'
 import { debounce } from 'frappe-ui'
 import { computed, watchEffect } from 'vue'
+import Checkbox from '../../components/Checkbox.vue'
 import DraggableList from '../../components/DraggableList.vue'
 import InlineFormControlLabel from '../../components/InlineFormControlLabel.vue'
 import { FIELDTYPES } from '../../helpers/constants'
@@ -108,7 +109,7 @@ function setNumberOption(index: number, option: keyof NumberColumnOptions, value
 										/>
 									</InlineFormControlLabel>
 
-									<Toggle
+									<Checkbox
 										label="Show short numbers"
 										:modelValue="getNumberOption(index, 'shorten_numbers')"
 										@update:modelValue="
@@ -145,19 +146,15 @@ function setNumberOption(index: number, option: keyof NumberColumnOptions, value
 				<FormControl v-model="config.decimal" type="number" autocomplete="off" />
 			</InlineFormControlLabel>
 
-			<Toggle label="Show short numbers" v-model="config.shorten_numbers" />
+			<Checkbox label="Show short numbers" v-model="config.shorten_numbers" />
 
-			<Toggle
-				v-if="config.date_column?.column_name"
-				label="Show comparison"
-				v-model="config.comparison"
-			/>
-			<Toggle
+			<Checkbox label="Show comparison" v-model="config.comparison" />
+			<Checkbox
 				v-if="config.comparison"
 				label="Negative is better"
 				v-model="config.negative_is_better"
 			/>
-			<Toggle v-if="config.comparison" label="Show sparkline" v-model="config.sparkline" />
+			<Checkbox v-if="config.date_column" label="Show sparkline" v-model="config.sparkline" />
 
 			<InlineFormControlLabel v-if="config.sparkline" label="Color">
 				<ColorInput

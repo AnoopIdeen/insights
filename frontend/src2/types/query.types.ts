@@ -85,7 +85,6 @@ export type Filter = { type: 'filter' } & FilterArgs
 
 export type FilterGroupArgs = { logical_operator: LogicalOperator; filters: FilterArgs[] }
 export type FilterGroup = { type: 'filter_group' } & FilterGroupArgs
-export type AdhocFilters = Record<string, FilterGroup>
 
 export type SelectArgs = { column_names: string[] }
 export type Select = { type: 'select' } & SelectArgs
@@ -122,8 +121,6 @@ export type Summarize = { type: 'summarize' } & SummarizeArgs
 
 export type OrderByArgs = { column: Column; direction: 'asc' | 'desc' }
 export type OrderBy = { type: 'order_by' } & OrderByArgs
-export type SortDirection = 'asc' | 'desc' | ''
-export type SortOrder = Record<string, SortDirection>
 
 export type Limit = { type: 'limit'; limit: number }
 

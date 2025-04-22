@@ -691,35 +691,6 @@ def date_diff(
     - date_diff(order_date, delivery_date, 'day')
     - date_diff(order_date, delivery_date, 'week')
     """
-
-    if not column.type().is_date():
-        column = column.cast("date")
-    if not other.type().is_date():
-        other = other.cast("date")
-
-    return column.delta(other, unit)
-
-
-def time_diff(
-    column: ir.TimeValue,
-    other: ir.TimeValue,
-    unit: str,
-):
-    """
-    def time_diff(column, other, unit)
-
-    Calculate the difference between two time columns. The unit can be hour, minute, second, millisecond, microsecond, nanosecond
-
-    Examples:
-    - time_diff(start_time, end_time, 'hour')
-    - time_diff(start_time, end_time, 'minute')
-    """
-
-    if not column.type().is_time():
-        column = column.cast("time")
-    if not other.type().is_time():
-        other = other.cast("time")
-
     return column.delta(other, unit)
 
 
@@ -1151,29 +1122,6 @@ def year_start(column: ir.DateValue):
 
     year_start = column.strftime("%Y-01-01").cast("date")
     return year_start
-
-
-def fiscal_year_start(column: ir.DateValue):
-    """
-    def fiscal_year_start(column)
-
-    Get the start date of the fiscal year for a given date.
-
-    Examples:
-    - fiscal_year_start(order_date)
-    """
-
-    fiscal_year_start_month = 4
-    fiscal_year_start_day = 1
-
-    year = column.year()
-    month = column.month()
-
-    return if_else(
-        month < fiscal_year_start_month,
-        ibis.date(year - 1, fiscal_year_start_month, fiscal_year_start_day),
-        ibis.date(year, fiscal_year_start_month, fiscal_year_start_day),
-    ).cast("date")
 
 
 def get_retention_data(date_column: ir.DateValue, id_column: ir.Column, unit: str):

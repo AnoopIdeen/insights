@@ -33,13 +33,11 @@ def get_context(context):
         redirect_to_v2()
         return
 
-    v3_routes = [
-        "/insights/dashboards",
-        "/insights/workbook",
+    guest_v3_routes = [
         "/insights/shared/chart",
         "/insights/shared/dashboard",
     ]
-    if any(route in frappe.request.path for route in v3_routes):
+    if any(route in frappe.request.path for route in guest_v3_routes):
         continue_to_v3(context)
         return
 

@@ -9,12 +9,9 @@ export type DashboardListItem = {
 	title: string
 	workbook: string
 	charts: number
-	creation: string
 	modified: string
-	created_from_now: string
 	modified_from_now: string
 	preview_image: string
-	views: number
 }
 
 const dashboards = ref<DashboardListItem[]>([])
@@ -28,11 +25,15 @@ async function fetchDashboards(search_term?: string, limit: number = 50) {
 	})
 	dashboards.value = dashboards.value.map((dashboard: any) => ({
 		...dashboard,
-		created_from_now: useTimeAgo(dashboard.creation),
+		// created_from_now: useTimeAgo(workbook.creation),
 		modified_from_now: useTimeAgo(dashboard.modified),
 	}))
 	loading.value = false
 	return dashboards.value
+}
+
+async function fetchWorkbookName(dashboard_name: string) {
+	return await call('insights.api.dashboards.get_workbook_name', { dashboard_name })
 }
 
 const updatingPreviewImage = ref<Record<string, boolean>>({})
@@ -62,6 +63,7 @@ export default function useDashboardStore() {
 		dashboards,
 		loading,
 		fetchDashboards,
+		fetchWorkbookName,
 
 		updatePreviewImage,
 		updatingPreviewImage,

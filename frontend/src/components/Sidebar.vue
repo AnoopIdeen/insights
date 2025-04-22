@@ -175,7 +175,7 @@ import {
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-const session = sessionStore()
+const session = sessionStore().session
 const settings = settingsStore().settings
 
 const showHelpDialog = ref(false)

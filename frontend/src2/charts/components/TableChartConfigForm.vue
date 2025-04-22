@@ -92,15 +92,11 @@ const dimensions = computed(() => [...props.dimensions, ...measuresAsDimensions.
 				</button>
 			</div>
 
-			<InlineFormControlLabel
-				v-if="config.columns.length"
-				class="!w-1/2"
-				label="Max Column Values"
-			>
+			<InlineFormControlLabel class="!w-1/2" label="Max Column Values">
 				<FormControl
 					type="number"
 					autocomplete="off"
-					:modelValue="config.max_column_values"
+					:modelValue="config.max_column_values || 10"
 					@update:modelValue="config.max_column_values = $event"
 				/>
 			</InlineFormControlLabel>
@@ -127,10 +123,10 @@ const dimensions = computed(() => [...props.dimensions, ...measuresAsDimensions.
 					+ Add column
 				</button>
 			</div>
-			<Toggle label="Show Filters" v-model="config.show_filter_row" />
-			<Toggle label="Show Row Totals" v-model="config.show_row_totals" />
-			<Toggle label="Show Column Totals" v-model="config.show_column_totals" />
-			<Toggle
+			<Checkbox label="Show Filters" v-model="config.show_filter_row" />
+			<Checkbox label="Show Row Totals" v-model="config.show_row_totals" />
+			<Checkbox label="Show Column Totals" v-model="config.show_column_totals" />
+			<Checkbox
 				v-if="config.values.length === 1"
 				label="Show Color Scale"
 				v-model="config.enable_color_scale"
