@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"Zm7vjz-Cd1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Dashboards</span>\",\"col\":12}},{\"id\":\"yIbkpPaiod\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}}]",
+ "content": "[{\"id\":\"Zm7vjz-Cd1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Dashboards</span>\",\"col\":12}},{\"id\":\"YvqNh5lc5p\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Lifecycle\",\"col\":3}},{\"id\":\"TUaNr9slCE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"HR\",\"col\":3}},{\"id\":\"wP8AxGl3wx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance \",\"col\":3}},{\"id\":\"lq6j9VeYia\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Recruitment\",\"col\":3}}]",
  "creation": "2025-04-21 11:56:39.944012",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Dashboards",
  "links": [],
- "modified": "2025-04-22 09:37:29.347508",
+ "modified": "2025-04-23 14:45:31.934621",
  "modified_by": "Administrator",
  "module": "Insights",
  "name": "Dashboards",
@@ -22,15 +22,43 @@
  "parent_page": "",
  "public": 1,
  "quick_lists": [],
- "roles": [],
- "sequence_id": 39.0,
+ "roles": [
+  {
+   "role": "Insights User"
+  },
+  {
+   "role": "Insights Admin"
+  }
+ ],
+ "sequence_id": 1.0,
  "shortcuts": [
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "Employee",
+   "label": "Recruitment",
    "type": "URL",
-   "url": "http://localhost:8000/insights/dashboards/jynf2skh"
+   "url": "/insights/dashboards/8razzbhm"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "HR",
+   "type": "URL",
+   "url": "/insights/dashboards/ao4eoiu."
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Employee Lifecycle",
+   "type": "URL",
+   "url": "/insights/dashboards/8m56aryz"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Attendance ",
+   "type": "URL",
+   "url": "/insights/dashboards/f5k1e5b8"
   }
  ],
  "title": "Dashboards"
