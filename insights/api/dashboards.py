@@ -85,7 +85,6 @@ def get_dashboards(search_term=None, limit=50):
     dashboards = []
     for workbook in workbooks:
         _dashboards = frappe.parse_json(workbook.dashboards)
-        print("_dashboards",_dashboards)
         for dashboard in _dashboards:
             if len(dashboards) >= limit:
                 break
