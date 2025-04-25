@@ -112,7 +112,7 @@ function openNewWorkbook() {
 }
 
 watchEffect(() => {
-	document.title = 'Workbooks | Insights'
+	document.title = 'Workbooks'
 })
 </script>
 

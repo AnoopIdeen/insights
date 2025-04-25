@@ -53,6 +53,7 @@ import {
 	PanelRightOpen,
 	SettingsIcon,
 } from 'lucide-vue-next'
+
 import { computed, ref } from 'vue'
 import useSettings from '../settings/settings'
 import Settings from '../settings/Settings.vue'

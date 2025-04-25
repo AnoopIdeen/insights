@@ -13,7 +13,7 @@
 					"
 				>
 					<img
-						src="../assets/insights-logo-new.svg"
+						src="../assets/logo.svg"
 						alt="logo"
 						class="h-8 w-8 flex-shrink-0 rounded"
 					/>

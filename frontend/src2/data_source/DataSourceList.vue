@@ -126,7 +126,7 @@ const listOptions = ref({
 	},
 })
 
-document.title = 'Data Sources | Insights'
+document.title = 'Data Sources'
 </script>
 
 <template>

@@ -29,7 +29,7 @@ const dropdownOptions = (dashboard: DashboardListItem) => {
 }
 
 watchEffect(() => {
-	document.title = 'Dashboards | Insights'
+	document.title = 'Dashboards'
 })
 </script>
 

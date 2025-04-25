@@ -64,7 +64,7 @@ const listOptions = ref({
 })
 
 watchEffect(() => {
-	document.title = 'Data Store | Insights'
+	document.title = 'Data Store'
 })
 </script>
 
