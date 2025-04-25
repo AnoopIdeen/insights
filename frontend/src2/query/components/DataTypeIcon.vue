@@ -7,29 +7,31 @@ import {
 	Hash,
 	ShieldQuestion,
 	Type,
+	Search,
 } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { ColumnDataType } from '../../types/query.types'
 
 const props = defineProps<{ columnType: ColumnDataType }>()
 const icon = computed(() => {
-	switch (props.columnType) {
-		case 'Integer':
-		case 'Decimal':
-			return Hash
-		case 'Date':
-			return Calendar
-		case 'Datetime':
-			return CalendarClock
-		case 'Time':
-			return Clock
-		case 'Text':
-			return Type
-		case 'String':
-			return Baseline
-		default:
-			return ShieldQuestion
-	}
+	return Search
+	// switch (props.columnType) {
+	// 	case 'Integer':
+	// 	case 'Decimal':
+	// 		return Hash
+	// 	case 'Date':
+	// 		return Calendar
+	// 	case 'Datetime':
+	// 		return CalendarClock
+	// 	case 'Time':
+	// 		return Clock
+	// 	case 'Text':
+	// 		return Type
+	// 	case 'String':
+	// 		return Baseline
+	// 	default:
+	// 		return ShieldQuestion
+	// }
 })
 </script>
 

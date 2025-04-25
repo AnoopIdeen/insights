@@ -75,7 +75,6 @@ const label = computed(() => {
 					<template #prefix>
 						<DataTypeIcon
 							v-if="filter.filter_type"
-							:column-type="(FILTER_TYPES[filter.filter_type][0] as ColumnDataType)"
 							class="h-4 w-4 flex-shrink-0"
 							stroke-width="1.5"
 						/>
