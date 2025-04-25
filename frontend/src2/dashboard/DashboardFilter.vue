@@ -59,7 +59,8 @@ const label = computed(() => {
 			: filterState.value
 		_label += ` ${filterState.operator} ${value_str}`
 	}
-	return _label
+
+	return _label.length >= 28 ? _label.slice(0, 28) + ' .....' : _label
 })
 </script>
 
