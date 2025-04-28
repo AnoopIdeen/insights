@@ -8,13 +8,14 @@ import {
 	ShieldQuestion,
 	Type,
 	Search,
+	Filter,
 } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { ColumnDataType } from '../../types/query.types'
 
 const props = defineProps<{ columnType: ColumnDataType }>()
 const icon = computed(() => {
-	return Search
+	return Filter
 	// switch (props.columnType) {
 	// 	case 'Integer':
 	// 	case 'Decimal':
