@@ -79,6 +79,8 @@ add_to_apps_screen = [
 setup_wizard_requires = "assets/insights/js/setup_wizard.js"
 setup_wizard_stages = "insights.setup.setup_wizard.get_setup_stages"
 
+
+
 # Installation
 # ------------
 
