@@ -1,29 +1,19 @@
 <script setup lang="ts">
-import { inject, ref } from 'vue'
+import { computed, inject } from 'vue'
 import DashboardBuilder from '../dashboard/DashboardBuilder.vue'
 import { workbookKey } from './workbook'
-import { useRouter } from 'vue-router'
 
-const props = defineProps<{ workbook_name?: string; dashboard_name: string }>()
+const props = defineProps<{ name?: string; index: number | string }>()
 
-const router = useRouter()
-const workbook = inject(workbookKey)!
-
-let dashboard_name = ref(props.dashboard_name)
-const index = Number(props.dashboard_name)
-if (
-	index >= 0 &&
-	workbook.doc.dashboards[index] &&
-	!workbook.doc.dashboards.find((q) => q.name === props.dashboard_name)
-) {
-	dashboard_name.value = workbook.doc.dashboards[index].name
-	router.replace(`/workbook/${workbook.doc.name}/dashboard/${dashboard_name.value}`)
-}
+const workbook = inject(workbookKey)
+const activeDashboard = computed(() => workbook?.doc.dashboards[Number(props.index)])
 </script>
 
 <template>
 	<DashboardBuilder
-		:dashboard_name="dashboard_name"
+		v-if="workbook && activeDashboard"
+		:key="activeDashboard.name"
+		:dashboard="activeDashboard"
 		:charts="workbook.doc.charts"
 		:queries="workbook.doc.queries"
 	/>

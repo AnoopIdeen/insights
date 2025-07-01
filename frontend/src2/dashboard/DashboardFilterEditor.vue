@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, reactive } from 'vue'
-import useChart from '../charts/chart'
+import { Chart, getCachedChart } from '../charts/chart'
 import { copy } from '../helpers'
 import { FIELDTYPES } from '../helpers/constants'
 import { ColumnOption } from '../types/query.types'
@@ -24,27 +24,32 @@ const charts = computed(() => {
 
 const queries = computed(() => {
 	return charts.value
-		.map((c) => useChart(c).getDependentQueries())
+		.map((c) => getCachedChart(c))
+		.filter(Boolean)
+		.map((c) => c!.getDependentQueries())
 		.flat()
 		.filter((q, i, self) => self.findIndex((qq) => qq === q) === i)
 		.filter(Boolean) as string[]
 })
 
 const linkOptions = computed(() => {
-	return charts.value.map((c) => {
-		const chart = useChart(c)
-		const dependentColumns = chart.getDependentQueryColumns().map((group) => {
+	return charts.value
+		.map((c) => getCachedChart(c))
+		.filter(Boolean)
+		.map((c) => {
+			const chart = c as Chart
+			const dependentColumns = chart.getDependentQueryColumns().map((group) => {
+				return {
+					...group,
+					items: disableColumnOptions(group.items),
+				}
+			})
 			return {
-				...group,
-				items: disableColumnOptions(group.items),
+				name: chart.doc.name,
+				title: chart.doc.title,
+				columns: dependentColumns,
 			}
 		})
-		return {
-			name: chart.doc.name,
-			title: chart.doc.title,
-			columns: dependentColumns,
-		}
-	})
 })
 
 const enabledLinks = computed(() => Object.keys(filter.links))
@@ -135,11 +140,11 @@ function saveEdit() {
 						:key="link.name"
 						class="flex h-8 w-full items-center gap-2"
 					>
-						<Toggle
+						<Checkbox
 							size="sm"
 							:modelValue="enabledLinks.includes(link.name)"
 							@update:modelValue="toggleLink(link.name)"
-						></Toggle>
+						></Checkbox>
 						<p class="flex-1 truncate text-base">{{ link.title }}</p>
 						<div v-if="enabledLinks.includes(link.name)" class="ml-auto flex-shrink-0">
 							<Autocomplete

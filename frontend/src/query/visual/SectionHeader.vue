@@ -20,5 +20,7 @@
 </template>
 
 <script setup>
+import Tooltip from '@/components/Tooltip.vue'
+
 defineProps(['title', 'info', 'icon'])
 </script>

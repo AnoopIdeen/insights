@@ -1,39 +1,35 @@
 <script setup lang="ts">
+import { watchDebounced } from '@vueuse/core'
 import { AlertTriangle, Maximize } from 'lucide-vue-next'
 import { computed, inject, ref, provide } from 'vue'
 import { useRouter } from 'vue-router'
-import useChart from '../charts/chart'
+import { getCachedChart } from '../charts/chart'
 import ChartRenderer from '../charts/components/ChartRenderer.vue'
-import { waitUntil, wheneverChanges } from '../helpers'
+import { wheneverChanges } from '../helpers'
 import { WorkbookDashboardChart } from '../types/workbook.types'
 import { workbookKey } from '../workbook/workbook'
 import { Dashboard } from './dashboard'
 
 const props = defineProps<{ item: WorkbookDashboardChart }>()
-const dashboard = inject<Dashboard>('dashboard')!
 
 const chart = computed(() => {
 	if (!props.item.chart) return null
-	return useChart(props.item.chart)
+	return getCachedChart(props.item.chart)
 })
-
-if (props.item.chart) {
-	waitUntil(() => Boolean(chart.value?.isloaded)).then(() => {
-		if (!chart.value?.dataQuery.result.executedSQL) {
-			dashboard.refreshChart(props.item.chart)
-		}
-
-		wheneverChanges(
-			() => chart.value?.doc.config.order_by,
-			() => dashboard.refreshChart(props.item.chart),
-			{
-				deep: true,
-				debounce: 500,
-			}
-		)
-	})
+provide('chart',chart)
+const dashboard = inject<Dashboard>('dashboard')!
+if (props.item.chart && !chart.value?.dataQuery.result.executedSQL) {
+	dashboard.refreshChart(props.item.chart)
 }
 
+watchDebounced(
+	() => chart.value?.doc.config.order_by,
+	() => props.item.chart && dashboard.refreshChart(props.item.chart),
+	{
+		deep: true,
+		debounce: 500,
+	}
+)
 const showExpandedChartDialog = ref(false)
 
 const router = useRouter()
@@ -43,14 +39,26 @@ wheneverChanges(
 	(editing: boolean) => {
 		if (!workbook) return
 		if (editing) {
-			router.push(`/workbook/${workbook.doc.name}/chart/${props.item.chart}`)
+			const chartIndex = workbook.doc.charts.findIndex((c) => c.name === props.item.chart)
+			if (chartIndex !== -1) {
+				router.push(`/workbook/${workbook.doc.name}/chart/${chartIndex}`)
+			}
 		}
 	}
 )
 </script>
 
 <template>
-	<ChartRenderer v-if="chart" :chart="chart" />
+	<ChartRenderer
+		v-if="chart"
+		:title="chart.doc.title"
+		:chart_type="chart.doc.chart_type"
+		:config="chart.doc.config"
+		:operations="chart.doc.operations"
+		:use_live_connection="chart.doc.use_live_connection"
+		:result="chart.dataQuery.result"
+		:loading="chart.dataQuery.executing"
+	/>
 
 	<div v-else class="flex h-full flex-1 flex-col items-center justify-center rounded border">
 		<AlertTriangle class="h-8 w-8 text-gray-500" stroke-width="1" />
@@ -75,7 +83,16 @@ wheneverChanges(
 	>
 		<template #body>
 			<div class="h-[75vh] w-full">
-				<ChartRenderer v-if="chart" :chart="chart" />
+				<ChartRenderer
+					v-if="chart"
+					:title="chart.doc.title"
+					:chart_type="chart.doc.chart_type"
+					:config="chart.doc.config"
+					:operations="chart.doc.operations"
+					:use_live_connection="chart.doc.use_live_connection"
+					:result="chart.dataQuery.result"
+					:loading="chart.dataQuery.executing"
+				/>
 			</div>
 		</template>
 	</Dialog>

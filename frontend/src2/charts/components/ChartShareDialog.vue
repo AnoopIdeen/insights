@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Globe } from 'lucide-vue-next'
-import { computed, ref, unref } from 'vue'
-import { copyToClipboard } from '../../helpers'
+import { computed, ref, unref, watchEffect } from 'vue'
+import { copy, copyToClipboard } from '../../helpers'
 import { Chart } from '../chart'
 
 const props = defineProps<{ chart: Chart }>()
@@ -23,6 +23,7 @@ const hasChanged = computed(() => {
 
 function saveChanges() {
 	chart.doc.is_public = isPublic.value
+	chart.doc.share_link = shareLink.value
 	show.value = false
 }
 </script>
@@ -55,7 +56,7 @@ function saveChanges() {
 								Anyone with the link can view this chart
 							</div>
 						</div>
-						<Toggle v-model="isPublic" />
+						<Checkbox v-model="isPublic" />
 					</div>
 					<div v-if="shareLink" class="flex overflow-hidden rounded bg-gray-100">
 						<div

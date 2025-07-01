@@ -1,17 +1,8 @@
 import { watchDebounced } from '@vueuse/core'
 import domtoimage from 'dom-to-image'
-import { isEqual } from 'es-toolkit'
-import { call, debounce } from 'frappe-ui'
+import { call } from 'frappe-ui'
 import { Socket } from 'socket.io-client'
-import {
-	inject,
-	watch,
-	onBeforeUnmount,
-	watch as vueWatch,
-	WatchCallback,
-	WatchSource,
-	WatchStopHandle
-} from 'vue'
+import { ComputedRef, inject, onBeforeUnmount, Ref, watch } from 'vue'
 import { getFormattedDate } from '../query/helpers'
 import session from '../session'
 import {
@@ -42,64 +33,50 @@ export function copy<T>(obj: T) {
 	return JSON.parse(JSON.stringify(obj)) as T
 }
 
-export function wheneverChanges(source: WatchSource, callback: WatchCallback, options: any = {}) {
-	let preVal: any
-	return watchDebounced(
-		source,
-		(val, _, onCleanup) => {
-			if (isEqual(val, preVal)) return
-			preVal = copy(val)
-			callback(val, preVal, onCleanup)
-		},
-		options
-	)
+export function wheneverChanges(
+	getter: Ref | ComputedRef | Function,
+	callback: Function,
+	options: any = {}
+) {
+	let prevValue: any
+	function onChange(value: any) {
+		if (areDeeplyEqual(value, prevValue)) return
+		prevValue = copy(value)
+		callback(value)
+	}
+	return watchDebounced(getter, onChange, options)
 }
 
-export type WatchOptions = {
-	deep?: boolean
-	immediate?: boolean
-	debounce?: number
-	toggleCondition?: () => boolean
-}
-export function watchToggle(source: WatchSource, callback: WatchCallback, options: WatchOptions = {}) {
-	const attachSourceWatcher = () => _watch(source, callback, options)
+export function areDeeplyEqual(obj1: any, obj2: any): boolean {
+	if (obj1 === obj2) return true
 
-	if (!options.toggleCondition) {
-		attachSourceWatcher()
-		return
+	if (Array.isArray(obj1) && Array.isArray(obj2)) {
+		if (obj1.length !== obj2.length) return false
+
+		return obj1.every((elem, index) => {
+			return areDeeplyEqual(elem, obj2[index])
+		})
 	}
 
-	if (options.toggleCondition) {
-		// only watch if condition is true
-		// stop the watcher if condition is false
-		let watching = false
-		let stop: WatchStopHandle
-		_watch(
-			options.toggleCondition,
-			(shouldWatch) => {
-				if (shouldWatch && !watching) {
-					watching = true
-					stop = attachSourceWatcher()
-				} else if (!shouldWatch && watching) {
-					watching = false
-					stop()
-				}
-			},
-			{
-				immediate: true,
+	if (typeof obj1 === 'object' && typeof obj2 === 'object' && obj1 !== null && obj2 !== null) {
+		if (Array.isArray(obj1) || Array.isArray(obj2)) return false
+
+		const keys1 = Object.keys(obj1)
+		const keys2 = Object.keys(obj2)
+
+		if (keys1.length !== keys2.length || !keys1.every((key) => keys2.includes(key))) return false
+
+		for (let key in obj1) {
+			let isEqual = areDeeplyEqual(obj1[key], obj2[key])
+			if (!isEqual) {
+				return false
 			}
-		)
-	}
-}
+		}
 
-function _watch(source: WatchSource, callback: WatchCallback, options: WatchOptions = {}) {
-	let _callback = callback
-
-	if (options.debounce) {
-		_callback = debounce(_callback, options.debounce)
+		return true
 	}
 
-	return vueWatch(source, _callback, options)
+	return false
 }
 
 export function waitUntil(fn: () => boolean) {

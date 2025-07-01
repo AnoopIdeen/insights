@@ -33,25 +33,26 @@ const routes = [
 	{
 		props: true,
 		name: 'Workbook',
-		path: '/workbook/:workbook_name',
+		path: '/workbook/:name',
 		component: () => import('./workbook/Workbook.vue'),
+		redirect: (to: RouteLocation) => `/workbook/${to.params.name}/query/0`,
 		meta: { hideSidebar: true },
 		children: [
 			{
 				props: true,
-				path: 'query/:query_name',
+				path: 'query/:index',
 				name: 'WorkbookQuery',
 				component: () => import('./workbook/WorkbookQuery.vue'),
 			},
 			{
 				props: true,
-				path: 'chart/:chart_name',
+				path: 'chart/:index',
 				name: 'WorkbookChart',
 				component: () => import('./workbook/WorkbookChart.vue'),
 			},
 			{
 				props: true,
-				path: 'dashboard/:dashboard_name',
+				path: 'dashboard/:index',
 				name: 'WorkbookDashboard',
 				component: () => import('./workbook/WorkbookDashboard.vue'),
 			},

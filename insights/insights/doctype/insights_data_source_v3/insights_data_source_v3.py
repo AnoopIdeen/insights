@@ -329,16 +329,8 @@ def before_request():
 
 
 def after_request():
-    closed = {}
-    for name, db in getattr(frappe.local, "insights_db_connections", {}).items():
-        try:
-            db.disconnect()
-            closed[name] = True
-        except Exception:
-            frappe.log_error(title=f"Failed to disconnect db connection for {name}")
-
-    for name in closed:
-        del frappe.local.insights_db_connections[name]
+    for db in getattr(frappe.local, "insights_db_connections", {}).values():
+        catch_error(db.disconnect)
 
 
 @contextmanager
@@ -348,3 +340,11 @@ def db_connections():
         yield
     finally:
         after_request()
+
+
+def catch_error(fn):
+    try:
+        return fn(), None
+    except Exception as e:
+        print(f"Error: {e}")
+        return None, e
