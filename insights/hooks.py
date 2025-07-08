@@ -103,6 +103,9 @@ fixtures = [
         "dt": "Insights Data Source v3",
         "filters": {"name": "Site DB"},
     },
+    {
+        "dt": "Insights Workbook"
+    }
 ]
 
 # Uninstallation
