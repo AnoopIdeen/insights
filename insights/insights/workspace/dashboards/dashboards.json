@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"Zm7vjz-Cd1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Dashboards</span>\",\"col\":12}},{\"id\":\"yIbkpPaiod\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}}]",
+ "content": "[{\"id\":\"Zm7vjz-Cd1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Dashboards</span>\",\"col\":12}},{\"id\":\"yIbkpPaiod\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dash Board\",\"col\":3}}]",
  "creation": "2025-04-21 11:56:39.944012",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Dashboards",
  "links": [],
- "modified": "2025-04-22 09:37:29.347508",
+ "modified": "2025-07-08 09:09:01.910461",
  "modified_by": "Administrator",
  "module": "Insights",
  "name": "Dashboards",
@@ -28,9 +28,9 @@
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "Employee",
+   "label": "Dash Board",
    "type": "URL",
-   "url": "http://localhost:8000/insights/dashboards/jynf2skh"
+   "url": "http://localhost:8000/insights/dashboards"
   }
  ],
  "title": "Dashboards"

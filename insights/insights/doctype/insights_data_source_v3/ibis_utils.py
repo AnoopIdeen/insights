@@ -559,8 +559,8 @@ def execute_ibis_query(query: IbisQuery, limit=100, cache=True, cache_expiry=360
     backend_id = backends[0].db_identity if backends else None
     cache_key = make_digest(sql, backend_id)
 
-    if cache and has_cached_results(cache_key):
-        return get_cached_results(cache_key), -1
+    # if cache and has_cached_results(cache_key):
+    #     return get_cached_results(cache_key), -1
 
     limit = int(limit or 100)
     limit = min(max(limit, 1), 10_00_000)

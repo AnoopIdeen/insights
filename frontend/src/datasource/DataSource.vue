@@ -133,7 +133,7 @@ function syncTables() {
 watchEffect(() => {
 	if (dataSource.doc?.name) {
 		const title = dataSource.doc.title || dataSource.doc.name
-		document.title = `${title} - HumanIQ`
+		document.title = `${title} - Reliance Gas`
 	}
 })
 

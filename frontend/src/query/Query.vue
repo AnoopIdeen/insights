@@ -26,7 +26,7 @@ const tabs = ref([
 watchEffect(() => {
 	if (query.doc?.name) {
 		const title = query.doc.title || query.doc.name
-		document.title = `${title} - HumanIQ`
+		document.title = `${title} - Reliance Gas`
 	}
 })
 </script>
